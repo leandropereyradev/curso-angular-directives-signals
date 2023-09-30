@@ -1,4 +1,4 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, effect, signal } from '@angular/core';
 import { User } from '../../interfaces/user-request.interface';
 
 @Component({
@@ -17,6 +17,16 @@ export class PropertiesPageComponent {
   public fullName = computed(
     () => `${this.user().first_name} ${this.user().last_name}`
   );
+
+  public counter = signal(10);
+  // Para destruir este effect se debe usar: this.userChangedEffect.destroy()
+  public userChangedEffect = effect(() => {
+    console.log(`${this.user().first_name} - ${this.counter()}`);
+  });
+
+  increaseBy(value: number) {
+    this.counter.update((current) => current + value);
+  }
 
   onFieldUpdate(field: keyof User, value: string) {
     // Opción set (no funcionaría con el campo ID porque es number)
